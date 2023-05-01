@@ -1,0 +1,3 @@
+[submodule "nerdFont"]
+	path = nerdFont
+	url = git@github.com:EmranMR/nerd-font-patcher.git

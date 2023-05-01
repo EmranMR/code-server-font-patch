@@ -14,12 +14,19 @@ if [ -z "$CODE_SERVER_PATH" -o ! -d "$WORKBENCH_PATH" ]; then
   exit 1
 fi
 
-if ! grep -q "/* ::CUSTOM VSCODE FONTS:: */" "$WORKBENCH_CSS_PATH"; then
-  # Copy fonts to $WORKBENCH_PATH
-  cp -rn ./resources/fonts "$WORKBENCH_PATH/"
-
-  # Prepend fonts.css to workbench.web.api.css
-  cat ./resources/fonts.css >> $WORKBENCH_CSS_PATH
+if grep -q "/* ::CUSTOM VSCODE FONTS:: */" "$WORKBENCH_CSS_PATH"; then
+  # Remove previously appended fonts.css from workbench.web.main.css
+  sed -i '/\/\* ::CUSTOM VSCODE FONTS:: \*\//,/\*\//d' $WORKBENCH_CSS_PATH
 fi
+
+# Delete all font files in the workbench path
+rm -f "$WORKBENCH_PATH/fonts/"*
+
+# Copy fonts to $WORKBENCH_PATH
+cp -rn ./resources/fonts "$WORKBENCH_PATH/"
+
+# Append fonts.css to workbench.web.main.css
+echo "/* ::CUSTOM VSCODE FONTS:: */" >> $WORKBENCH_CSS_PATH
+cat ./resources/fonts.css >> $WORKBENCH_CSS_PATH
 
 echo "Done! Have fun!"
